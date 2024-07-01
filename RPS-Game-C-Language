@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+#define PLAYER_VS_PLAYER 1
+#define PLAYER_VS_COMP 2
+#define ROCK 1
+#define PAPER 2
+#define SCISSOR 3
+
+int generateRandomNumber() {
+    return rand() % 3 + 1;
+}
+
+int playerChoice(int choice, const char* player) {
+    int isValidChoice = 1;
+    if(choice == ROCK) {
+        printf("%s choose Rock\n", player);
+    } else if(choice == PAPER) {
+        printf("%s choose Paper\n", player);
+    } else if(choice == SCISSOR) {
+        printf("%s choose Scissor\n", player);
+    } else {
+        isValidChoice = 0;
+        printf("Invalid Choice; please try again\n");
+    }
+    return isValidChoice;
+}
+
+void determineWinner(int p1Choice, int p2Choice, const char* p1, const char* p2) {
+    if(p1Choice == p2Choice) {
+        printf("It is a TIE!!\n");
+    } else if((p1Choice == ROCK && p2Choice == SCISSOR) || 
+              (p1Choice == PAPER && p2Choice == ROCK) || 
+              (p1Choice == SCISSOR && p2Choice == PAPER)) {
+        printf("%s Win\n", p1);
+    } else {
+        printf("%s Win\n", p2);
+    }
+}
+
+void printOptions(){
+    printf("Choose Option\n");
+    printf("1) Rock\n");
+    printf("2) Paper\n");
+    printf("3) Scissor\n");
+}
+
+int main() {
+    char p1[50] = "You";
+    char p2[50] = "Computer";
+    
+    int gameMode = 0;
+    int p1Choice = 0;
+    int p2Choice = 0;
+
+    printf("Stone, Paper, Scissor Game\n");
+    
+    printf("1) Player VS Player\n");
+    printf("2) Player VS Computer\n");
+    printf("Enter 1 or 2 to select Game Mode\n");
+    
+    scanf("%d", &gameMode);
+    
+    if(gameMode == PLAYER_VS_PLAYER){
+        printf("Enter 1st Player Name: ");
+        scanf("%s", p1);
+        printf("Enter 2nd Player Name: ");
+        scanf("%s", p2);
+    } else if(gameMode == PLAYER_VS_COMP){
+        printf("Enter Player Name: ");
+        scanf("%s", p1);
+    } else {
+        printf("Invalid Choice; please try again\n");
+        return 0;
+    }
+    
+    printOptions();
+
+    scanf("%d", &p1Choice);
+    int isValidChoice = playerChoice(p1Choice, p1);
+    if(!isValidChoice){
+        return 0;
+    }
+
+    printf("%s Turn\n", p2);
+
+    if(gameMode == PLAYER_VS_COMP) {
+        srand(time(0)); // Seed the random number generator
+        p2Choice = generateRandomNumber();
+    } else {
+        scanf("%d", &p2Choice);
+    }
+    isValidChoice = playerChoice(p2Choice, p2);
+    if(!isValidChoice){
+        return 0;
+    }
+    determineWinner(p1Choice, p2Choice, p1, p2);
+    
+    return 0;
+}
