@@ -1,1 +1,137 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to represent a bank account
+typedef struct {
+    char accountNumber[20];
+    char accountHolderName[100];
+    double balance;
+} Account;
+
+// Array to store accounts
+Account accounts[100];
+int accountCount = 0;
+
+// Function to create an account
+void createAccount() {
+    Account newAccount;
+
+    printf("Enter Account Number: ");
+    scanf("%s", newAccount.accountNumber);
+    printf("Enter Account Holder Name: ");
+    scanf(" %[^\n]", newAccount.accountHolderName);
+    printf("Enter Initial Balance: ");
+    scanf("%lf", &newAccount.balance);
+
+    accounts[accountCount++] = newAccount;
+    printf("Account created successfully.\n");
+}
+
+// Function to find an account by account number
+int findAccount(char *accNumber) {
+    for (int i = 0; i < accountCount; i++) {
+        if (strcmp(accounts[i].accountNumber, accNumber) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// Function to display account details
+void displayAccountDetails() {
+    char accNumber[20];
+    printf("Enter Account Number: ");
+    scanf("%s", accNumber);
+
+    int index = findAccount(accNumber);
+    if (index != -1) {
+        Account acc = accounts[index];
+        printf("Account Number: %s\n", acc.accountNumber);
+        printf("Account Holder Name: %s\n", acc.accountHolderName);
+        printf("Balance: %.2f\n", acc.balance);
+    } else {
+        printf("Account not found.\n");
+    }
+}
+
+// Function to deposit money into an account
+void depositToAccount() {
+    char accNumber[20];
+    double amount;
+
+    printf("Enter Account Number: ");
+    scanf("%s", accNumber);
+    printf("Enter Amount to Deposit: ");
+    scanf("%lf", &amount);
+
+    int index = findAccount(accNumber);
+    if (index != -1) {
+        accounts[index].balance += amount;
+        printf("Amount deposited successfully.\n");
+    } else {
+        printf("Account not found.\n");
+    }
+}
+
+// Function to withdraw money from an account
+void withdrawFromAccount() {
+    char accNumber[20];
+    double amount;
+
+    printf("Enter Account Number: ");
+    scanf("%s", accNumber);
+    printf("Enter Amount to Withdraw: ");
+    scanf("%lf", &amount);
+
+    int index = findAccount(accNumber);
+    if (index != -1) {
+        if (accounts[index].balance >= amount) {
+            accounts[index].balance -= amount;
+            printf("Amount withdrawn successfully.\n");
+        } else {
+            printf("Insufficient balance.\n");
+        }
+    } else {
+        printf("Account not found.\n");
+    }
+}
+
+// Main menu for the bank management system
+int main() {
+    int choice;
+
+    while (1) {
+        printf("\nBank Management System\n");
+        printf("1. Create Account\n");
+        printf("2. Balance Inquiry\n");
+        printf("3. Deposit Money\n");
+        printf("4. Withdraw Money\n");
+        printf("5. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                createAccount();
+                break;
+            case 2:
+                displayAccountDetails();
+                break;
+            case 3:
+                depositToAccount();
+                break;
+            case 4:
+                withdrawFromAccount();
+                break;
+            case 5:
+                printf("Exiting...\n");
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
